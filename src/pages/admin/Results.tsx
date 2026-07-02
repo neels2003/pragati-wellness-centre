@@ -205,7 +205,7 @@ console.log("UPLOAD ERROR", error);
               key={r.id}
               className="card-glass overflow-hidden hover:shadow-md transition-all"
             >
-              <div className="grid grid-cols-2 h-40">
+              <div className="grid grid-cols-2 h-56 overflow-hidden flex-shrink-0">
                 <div className="relative bg-dark-700">
                   {r.before_image ? (
                     <img

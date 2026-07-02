@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import AdminLayout from './AdminLayout';
-import { Plus, Pencil, Trash2, Star, MessageSquare } from 'lucide-react';
+import { Plus, Pencil, Trash2, Star, MessageSquare, Upload, Loader2 } from 'lucide-react';
 import type { Database } from '../../types/database';
 
 type Testimonial = Database['public']['Tables']['testimonials']['Row'];
@@ -14,6 +14,9 @@ export default function AdminTestimonials() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Testimonial | null>(null);
   const [form, setForm] = useState({ customer_name: '', rating: 5, review_text: '', customer_photo: '' });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -34,6 +37,8 @@ export default function AdminTestimonials() {
   const openAdd = () => {
     setEditing(null);
     setForm({ customer_name: '', rating: 5, review_text: '', customer_photo: '' });
+    setPhotoFile(null);
+    setPhotoPreview('');
     setModalOpen(true);
   };
 
@@ -45,24 +50,61 @@ export default function AdminTestimonials() {
       review_text: item.review_text,
       customer_photo: item.customer_photo || '',
     });
+    setPhotoFile(null);
+    setPhotoPreview(item.customer_photo || '');
     setModalOpen(true);
+  };
+
+  const uploadToStorage = async (file: File): Promise<string> => {
+    const ext = file.name.split('.').pop();
+    const filename = `photo_${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${ext}`;
+    const { data, error } = await supabase.storage
+      .from('Results')
+      .upload(filename, file, { upsert: false });
+    if (error) throw error;
+    const { data: publicData } = supabase.storage
+      .from('Results')
+      .getPublicUrl(data.path);
+    return publicData.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
-      customer_name: form.customer_name,
-      rating: form.rating,
-      review_text: form.review_text,
-      customer_photo: form.customer_photo || null,
-    };
-    if (editing) {
-      await supabase.from('testimonials').update(payload).eq('id', editing.id);
-    } else {
-      await supabase.from('testimonials').insert(payload);
+    setUploading(true);
+    let customerPhoto = form.customer_photo;
+
+    try {
+      if (photoFile) {
+        customerPhoto = await uploadToStorage(photoFile);
+      }
+
+      const payload = {
+        customer_name: form.customer_name,
+        rating: form.rating,
+        review_text: form.review_text,
+        customer_photo: customerPhoto || null,
+      };
+      if (editing) {
+        await supabase.from('testimonials').update(payload).eq('id', editing.id);
+      } else {
+        await supabase.from('testimonials').insert(payload);
+      }
+      setModalOpen(false);
+      fetch();
+    } catch (err) {
+      console.error('Upload failed:', err);
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
     }
-    setModalOpen(false);
-    fetch();
+  };
+
+  const handlePhotoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setPhotoFile(file);
+    if (file) setPhotoPreview(URL.createObjectURL(file));
+    else if (editing) setPhotoPreview(form.customer_photo);
+    else setPhotoPreview('');
   };
 
   const handleDelete = async (id: string) => {
@@ -146,12 +188,39 @@ export default function AdminTestimonials() {
                 <textarea required rows={3} value={form.review_text} onChange={(e) => setForm({ ...form, review_text: e.target.value })} className="w-full px-4 py-2.5 rounded-xl bg-dark-700 border border-white/10 text-sm text-white focus:outline-none focus:border-mint resize-none placeholder-white/30" />
               </div>
               <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Customer Photo URL</label>
-                <input value={form.customer_photo} onChange={(e) => setForm({ ...form, customer_photo: e.target.value })} className="w-full px-4 py-2.5 rounded-xl bg-dark-700 border border-white/10 text-sm text-white focus:outline-none focus:border-mint placeholder-white/30" placeholder="https://... (optional)" />
+                <label className="text-xs font-medium text-white/50 mb-1 block">Customer Photo</label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoFile}
+                    className="hidden"
+                    id="photo-input"
+                  />
+                  <label
+                    htmlFor="photo-input"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-dark-700 border border-white/10 text-sm text-white cursor-pointer hover:bg-dark-600 transition-colors"
+                  >
+                    <Upload size={16} />
+                    {photoFile ? photoFile.name : 'Choose Photo'}
+                  </label>
+                </div>
+                {photoPreview && (
+                  <div className="mt-2 rounded-xl overflow-hidden border border-white/10 h-32">
+                    <img
+                      src={photoPreview}
+                      alt="Photo preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex gap-3 mt-2">
-                <button type="button" onClick={() => setModalOpen(false)} className="flex-1 px-4 py-2.5 rounded-xl bg-dark-700 text-sm font-medium text-white/70 hover:bg-dark-600 transition-colors">Cancel</button>
-                <button type="submit" className="flex-1 px-4 py-2.5 rounded-xl bg-dark-600 text-white text-sm font-medium border border-mint/30 hover:bg-dark-500 transition-colors">Save</button>
+                <button type="button" onClick={() => setModalOpen(false)} disabled={uploading} className="flex-1 px-4 py-2.5 rounded-xl bg-dark-700 text-sm font-medium text-white/70 hover:bg-dark-600 transition-colors">Cancel</button>
+                <button type="submit" disabled={uploading} className="flex-1 px-4 py-2.5 rounded-xl bg-dark-600 text-white text-sm font-medium border border-mint/30 hover:bg-dark-500 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2">
+                  {uploading && <Loader2 size={14} className="animate-spin" />}
+                  {uploading ? 'Uploading...' : 'Save'}
+                </button>
               </div>
             </form>
           </div>
