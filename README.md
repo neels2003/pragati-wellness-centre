@@ -33,11 +33,11 @@ A modern Fitness & Wellness website built using **React**, **TypeScript**, **Tai
 
 ## Admin Dashboard
 
-![Admin Dashboard](Screenshots/Admin-Dashboard.png)
+![Admin Dashboard](Screenshots/Admin_Dashboard.png)
 
 ## Admin Results
 
-![Admin Results](Screenshots/admin-results.png)
+![Admin Results](Screenshots/results.png)
 
 ## Testimonials
 
