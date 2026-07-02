@@ -29,7 +29,7 @@ A modern Fitness & Wellness website built using **React**, **TypeScript**, **Tai
 
 ## Results
 
-![Results](Screenshots/admin_result.png)
+![Results](Screenshots/result.png)
 
 ## Admin Dashboard
 
@@ -37,7 +37,7 @@ A modern Fitness & Wellness website built using **React**, **TypeScript**, **Tai
 
 ## Admin Results
 
-![Admin Results](Screenshots/results.png)
+![Admin Results](Screenshots/admin_result.png)
 
 ## Testimonials
 
@@ -46,6 +46,9 @@ A modern Fitness & Wellness website built using **React**, **TypeScript**, **Tai
 ## Contact
 
 ![Contact](Screenshots/Contact.png)
+## Enquiries
+
+![Contact](Screenshots/Admin_Enquiries.png)
 
 ---
 
