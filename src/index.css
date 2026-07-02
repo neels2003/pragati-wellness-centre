@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #0d3b10;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .nav-pill {
+    @apply px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200;
+  }
+  .nav-pill.active {
+    @apply text-dark-900;
+    background-color: #4ade80;
+  }
+  .nav-pill:not(.active) {
+    @apply text-white/80 hover:text-white hover:bg-white/10;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full bg-dark-600 text-white text-sm font-medium border border-mint/30 hover:bg-dark-500 transition-all duration-300 hover:shadow-lg hover:shadow-mint/20;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 text-white text-sm font-medium border border-white/20 hover:bg-white/20 transition-all duration-300;
+  }
+  .card-glass {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight;
+  }
+  .section-subtitle {
+    @apply text-sm text-white/60 max-w-md mx-auto leading-relaxed;
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d3b10;
+}
+::-webkit-scrollbar-thumb {
+  background: #2e7d32;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4ade80;
+}
+
+/* Floating animations */
+@keyframes float-card {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes float-card-reverse {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(-2deg); }
+}
+
+.animate-float-card {
+  animation: float-card 4s ease-in-out infinite;
+}
+
+.animate-float-card-reverse {
+  animation: float-card-reverse 4s ease-in-out infinite;
+}
