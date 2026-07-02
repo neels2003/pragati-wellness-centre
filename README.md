@@ -1,35 +1,116 @@
 # 🏋️ Pragati Wellness Centre
 
-A modern Fitness & Wellness website built using React, TypeScript, Tailwind CSS and Supabase.
+A modern Fitness & Wellness website built using **React**, **TypeScript**, **Tailwind CSS**, and **Supabase**.
 
 ## ✨ Features
 
-- Responsive modern UI
-- Admin Dashboard
-- Authentication
-- Course Management
-- Lesson Management
-- Transformation Results
-- Testimonials
-- Contact Form
-- YouTube Lesson Integration
-- Image Upload with Supabase Storage
+- 👨‍💼 Admin Dashboard
+- 📚 Course Management
+- 🎥 Video Lessons
+- 🏆 Before / After Transformation Results
+- 💬 Customer Testimonials
+- 📩 Contact Enquiries
+- ⚙️ Website Settings Panel
+- 📱 Fully Responsive Design
+- ☁️ Supabase Storage for Image Uploads
+- 🔐 Secure Authentication
 
-## 🛠 Tech Stack
+---
+
+# 📸 Screenshots
+
+## Home
+
+![Home](Screenshots/HeroSection.png)
+
+## Courses
+
+![Courses](Screenshots/Prog.png)
+
+## Results
+
+![Results](Screenshots/admin_result.png)
+
+## Admin Dashboard
+
+![Admin Dashboard](Screenshots/Admin-Dashboard.png)
+
+## Admin Results
+
+![Admin Results](Screenshots/admin-results.png)
+
+## Testimonials
+
+![Testimonials](Screenshots/Testimonials.png)
+
+## Contact
+
+![Contact](Screenshots/Contact.png)
+
+---
+
+# 🛠 Tech Stack
 
 - React
 - TypeScript
 - Tailwind CSS
 - Vite
 - Supabase
+- PostgreSQL
+- HTML5
+- CSS3
 
-## 🚀 Installation
+---
+
+# 🚀 Installation
+
+```bash
+git clone https://github.com/neels2003/pragati-wellness-centre.git
+```
+
+```bash
+cd pragati-wellness-centre
+```
 
 ```bash
 npm install
+```
+
+```bash
 npm run dev
 ```
 
-## 👨‍💻 Author
+---
 
-Neelesh Deshpande
+# 📂 Folder Structure
+
+```
+src/
+components/
+pages/
+hooks/
+lib/
+types/
+supabase/
+Screenshots/
+```
+
+---
+
+# 📌 Future Improvements
+
+- Payment Gateway
+- User Authentication
+- Course Progress Tracking
+- Attendance System
+- Notifications
+- Dark / Light Theme
+
+---
+
+# 👨‍💻 Developer
+
+**Neelesh Deshpande**
+
+GitHub:
+https://github.com/neels2003
